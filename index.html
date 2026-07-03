@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صرافی Dillony - خرید و فروش توکن</title>
+    <!-- حذف اسکریپت TonConnect از CDN و جایگزینی با روش جدید -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tahoma', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f4e 50%, #2a1f5e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-area .placeholder-logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid #6c63ff;
+            background: linear-gradient(135deg, #6c63ff, #3f37c9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-area .placeholder-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-area .placeholder-logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(108, 99, 255, 0.3);
+        }
+
+        .token-info h1 {
+            font-size: 32px;
+            color: #6c63ff;
+            margin-bottom: 5px;
+        }
+
+        .token-info .supply {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .admin-badge {
+            display: none;
+            padding: 5px 15px;
+            background: #ff9800;
+            color: #000;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .wallet-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .wallet-status {
+            padding: 10px 20px;
+            background: rgba(108, 99, 255, 0.2);
+            border-radius: 12px;
+            font-size: 14px;
+            border: 1px solid rgba(108, 99, 255, 0.3);
+        }
+
+        .wallet-status .address {
+            color: #6c63ff;
+            font-weight: bold;
+        }
+
+        .btn-connect-wallet {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #6c63ff, #3f37c9);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-connect-wallet:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-connect-wallet:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .main-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .price-section {
+            text-align: center;
+            padding: 30px;
+            background: rgba(108, 99, 255, 0.1);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(108, 99, 255, 0.2);
+        }
+
+        .price-section .current-price {
+            font-size: 52px;
+            font-weight: bold;
+            color: #6c63ff;
+            text-shadow: 0 0 30px rgba(108, 99, 255, 0.3);
+        }
+
+        .price-section .price-label {
+            font-size: 16px;
+            color: #aaa;
+            margin-top: 5px;
+        }
+
+        .price-section .price-change {
+            font-size: 20px;
+            margin-top: 15px;
+            padding: 10px 20px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .price-change.up { 
+            color: #4caf50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .price-change.down { 
+            color: #f44336;
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .last-update {
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .trade-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .trade-box {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+
+        .trade-box:hover {
+            border-color: rgba(108, 99, 255, 0.3);
+            box-shadow: 0 10px 40px rgba(108, 99, 255, 0.1);
+        }
+
+        .trade-box h2 {
+            color: #6c63ff;
+            margin-bottom: 20px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .trade-box .icon {
+            font-size: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #6c63ff;
+            box-shadow: 0 0 20px rgba(108, 99, 255, 0.2);
+        }
+
+        .input-group input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .input-group .hint {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .input-group .balance-info {
+            font-size: 13px;
+            color: #6c63ff;
+            margin-top: 5px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #fff;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-buy {
+            background: linear-gradient(135deg, #4caf50, #388e3c);
+        }
+
+        .btn-sell {
+            background: linear-gradient(135deg, #f44336, #c62828);
+        }
+
+        .btn-admin {
+            background: linear-gradient(135deg, #ff9800, #e65100);
+            margin-top: 10px;
+        }
+
+        .admin-panel {
+            margin-top: 30px;
+            padding: 30px;
+            background: rgba(255, 152, 0, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 152, 0, 0.2);
+            display: none;
+        }
+
+        .admin-panel.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .admin-panel h2 {
+            color: #ff9800;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        .admin-controls .control-group {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .admin-controls label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .admin-controls input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .admin-controls input:focus {
+            outline: none;
+            border-color: #ff9800;
+        }
+
+        .btn-small {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #fff;
+            width: 100%;
+        }
+
+        .btn-price-up {
+            background: #4caf50;
+        }
+
+        .btn-price-down {
+            background: #f44336;
+        }
+
+        .btn-set-price {
+            background: #ff9800;
+        }
+
+        .image-upload {
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .image-upload input[type="file"] {
+            display: none;
+        }
+
+        .image-upload .upload-label {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #6c63ff;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .image-upload .upload-label:hover {
+            background: #5a52d5;
+            transform: scale(1.05);
+        }
+
+        /* Login Modal */
+        .login-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-overlay.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .login-modal {
+            background: linear-gradient(135deg, #1a1f4e, #2a1f5e);
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,152,0,0.3);
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .login-modal h2 {
+            color: #ff9800;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .login-modal p {
+            color: #aaa;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .login-modal .input-group {
+            margin-bottom: 20px;
+        }
+
+        .login-modal .input-group label {
+            color: #ccc;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .login-modal .input-group input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .login-modal .input-group input:focus {
+            outline: none;
+            border-color: #ff9800;
+        }
+
+        .login-modal .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff9800, #e65100);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-modal .btn-login:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(255, 152, 0, 0.3);
+        }
+
+        .login-modal .login-error {
+            color: #f44336;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .login-modal .login-error.show {
+            display: block;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4caf50;
+            color: #4caf50;
+        }
+
+        .message.error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #f44336;
+            color: #f44336;
+        }
+
+        .message.info {
+            background: rgba(108, 99, 255, 0.2);
+            border: 1px solid #6c63ff;
+            color: #6c63ff;
+        }
+
+        .not-connected {
+            text-align: center;
+            padding: 40px;
+            opacity: 0.6;
+        }
+
+        .not-connected .big-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .trade-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .wallet-section {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .price-section .current-price {
+                font-size: 36px;
+            }
+
+            .main-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="placeholder-logo" id="tokenLogo" title="برای ورود ادمین ۵ بار کلیک کنید">D</div>
+                <div class="token-info">
+                    <h1>💰 Dillony <span id="adminBadge" class="admin-badge">👑 ادمین</span></h1>
+                    <div class="supply">کل عرضه: ۵۰۰,۰۰۰,۰۰۰,۰۰۰ توکن</div>
+                    <div class="supply" id="circulatingSupply">در گردش: ۰ توکن</div>
+                </div>
+            </div>
+            <div class="wallet-section">
+                <div id="walletStatus" class="wallet-status">
+                    🔴 کیف پول متصل نیست
+                </div>
+                <button class="btn-connect-wallet" id="connectWalletBtn">🔗 اتصال به Tonkeeper</button>
+            </div>
+        </div>
+
+        <!-- Main Card -->
+        <div class="main-card">
+            <!-- Price Section -->
+            <div class="price-section">
+                <div class="price-label">💰 قیمت هر توکن Dillony</div>
+                <div class="current-price" id="currentPrice">۰.۵۰۰۰</div>
+                <div class="price-label">به ازای هر Gram</div>
+                <div id="priceChange" class="price-change up">
+                    📈 تغییر: <span class="change-value" id="changeValue">+۰.۰۰۰۰</span>
+                </div>
+                <div class="last-update" id="lastUpdate">آخرین بروزرسانی: لحظه‌ای</div>
+            </div>
+
+            <!-- Trade Section -->
+            <div class="trade-grid" id="tradeSection">
+                <div class="trade-box">
+                    <h2><span class="icon">🟢</span> خرید توکن</h2>
+                    <div class="input-group">
+                        <label>مقدار Gram برای پرداخت</label>
+                        <input type="number" id="buyAmount" placeholder="مثال: ۱۰" min="0" step="0.1">
+                        <div class="hint">حداقل خرید: ۰.۱ Gram</div>
+                        <div class="balance-info" id="buyBalance">💰 موجودی کیف پول: ۰ Gram</div>
+                    </div>
+                    <div class="input-group">
+                        <label>تعداد توکن دریافتی</label>
+                        <input type="text" id="buyReceive" readonly placeholder="۰">
+                    </div>
+                    <button class="btn btn-buy" id="buyBtn" disabled>خرید توکن</button>
+                    <div id="buyMessage" class="message"></div>
+                </div>
+
+                <div class="trade-box">
+                    <h2><span class="icon">🔴</span> فروش توکن</h2>
+                    <div class="input-group">
+                        <label>تعداد توکن برای فروش</label>
+                        <input type="number" id="sellAmount" placeholder="مثال: ۱۰۰۰" min="0" step="1">
+                        <div class="hint">حداقل فروش: ۱۰۰ توکن</div>
+                        <div class="balance-info" id="sellBalance">💰 موجودی توکن: ۰ Dillony</div>
+                    </div>
+                    <div class="input-group">
+                        <label>مقدار Gram دریافت می‌شود</label>
+                        <input type="text" id="sellReceive" readonly placeholder="۰">
+                    </div>
+                    <button class="btn btn-sell" id="sellBtn" disabled>فروش توکن</button>
+                    <div id="sellMessage" class="message"></div>
+                </div>
+            </div>
+
+            <!-- Not connected overlay -->
+            <div id="notConnected" class="not-connected hidden">
+                <div class="big-icon">🔗</div>
+                <h3>لطفاً کیف پول خود را متصل کنید</h3>
+                <p>برای خرید و فروش توکن Dillony، کیف پول Tonkeeper خود را متصل کنید</p>
+            </div>
+
+            <!-- Admin Panel -->
+            <div class="admin-panel" id="adminPanel">
+                <h2>⚙️ پنل مدیریت</h2>
+                <div class="admin-controls">
+                    <div class="control-group">
+                        <label>تنظیم قیمت دستی</label>
+                        <input type="number" id="manualPrice" placeholder="قیمت جدید" step="0.0001" min="0">
+                        <button class="btn-small btn-set-price" id="setPriceBtn">اعمال قیمت</button>
+                    </div>
+                    <div class="control-group">
+                        <label>تغییر خودکار قیمت</label>
+                        <button class="btn-small btn-price-up" id="increasePriceBtn">📈 افزایش ۵%</button>
+                        <button class="btn-small btn-price-down" id="decreasePriceBtn" style="margin-top:10px;">📉 کاهش ۳%</button>
+                    </div>
+                    <div class="control-group image-upload">
+                        <label>آپلود عکس پروژه</label>
+                        <input type="file" id="imageUpload" accept="image/*">
+                        <label for="imageUpload" class="upload-label">📸 انتخاب عکس</label>
+                        <div style="margin-top:10px; font-size:12px; color:#888;">حداکثر ۲ مگابایت</div>
+                    </div>
+                </div>
+                <div id="adminMessage" class="message"></div>
+                <button class="btn btn-admin" id="logoutAdminBtn" style="margin-top:15px;">🚪 خروج از پنل مدیریت</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="login-overlay" id="loginModal">
+        <div class="login-modal">
+            <h2>🔐 ورود به پنل مدیریت</h2>
+            <p>لطفاً اطلاعات خود را وارد کنید</p>
+            <div class="input-group">
+                <label>👤 نام کاربری</label>
+                <input type="text" id="loginUsername" placeholder="نام کاربری خود را وارد کنید">
+            </div>
+            <div class="input-group">
+                <label>🔑 رمز عبور</label>
+                <input type="password" id="loginPassword" placeholder="رمز عبور خود را وارد کنید">
+            </div>
+            <button class="btn-login" id="loginBtn">ورود به پنل مدیریت</button>
+            <div class="login-error" id="loginError">❌ نام کاربری یا رمز عبور اشتباه است!</div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        //  اطلاعات ادمین
+        // ============================================
+        const ADMIN_CREDENTIALS = {
+            username: 'Manirahbari',
+            password: 'Manirahbari2009'
+        };
+
+        // ============================================
+        //  داده‌های برنامه
+        // ============================================
+        const APP_DATA = {
+            tokenName: 'Dillony',
+            tokenSymbol: 'DNY',
+            totalSupply: 500000000000,
+            circulatingSupply: 0,
+            price: 0.5,
+            walletBalance: 0,
+            tokenBalance: 0,
+            isAdmin: false,
+            lastPriceUpdate: new Date().toISOString(),
+            clickCount: 0,
+            lastClickTime: null,
+            walletAddress: null,
+            isConnected: false
+        };
+
+        // ============================================
+        //  بارگذاری داده‌ها
+        // ============================================
+        function loadData() {
+            try {
+                const saved = localStorage.getItem('dillonyData');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    Object.assign(APP_DATA, data);
+                }
+            } catch (e) {
+                console.log('داده‌ای ذخیره نشده');
+            }
+            updateUI();
+        }
+
+        function saveData() {
+            try {
+                const dataToSave = { ...APP_DATA };
+                delete dataToSave.walletAddress;
+                delete dataToSave.isConnected;
+                localStorage.setItem('dillonyData', JSON.stringify(dataToSave));
+            } catch (e) {
+                console.error('خطا در ذخیره‌سازی:', e);
+            }
+        }
+
+        // ============================================
+        //  اتصال به Tonkeeper با روش مستقیم
+        // ============================================
+        function connectToTonkeeper() {
+            const tonkeeperUrl = 'https://app.tonkeeper.com/connect';
+
+            // ساخت پیام اتصال
+            const connectData = {
+                manifest: 'https://gist.githubusercontent.com/yourusername/yourmanifest/raw/tonconnect-manifest.json',
+                items: [
+                    { name: 'ton_addr' },
+                    { name: 'ton_proof' }
+                ]
+            };
+
+            // باز کردن Tonkeeper
+            const encodedData = encodeURIComponent(JSON.stringify(connectData));
+            window.open(`${tonkeeperUrl}?data=${encodedData}`, '_blank');
+            
+            // شبیه‌سازی اتصال (برای تست)
+            simulateConnection();
+        }
+
+        // شبیه‌سازی اتصال برای تست (در نسخه واقعی این قسمت با پاسخ از Tonkeeper جایگزین می‌شود)
+        function simulateConnection() {
+            document.getElementById('walletStatus').innerHTML = '🟡 در حال اتصال به Tonkeeper...';
+            
+            // بعد از ۲ ثانیه شبیه‌سازی اتصال
+            setTimeout(() => {
+                APP_DATA.isConnected = true;
+                APP_DATA.walletAddress = 'EQD4FPq-PRThmTzI58o4R6t2xGQkPqHbMqXHjD3n5Ck1';
+                document.getElementById('walletStatus').innerHTML = `
+                    🟢 متصل: <span class="address">${APP_DATA.walletAddress.slice(0,6)}...${APP_DATA.walletAddress.slice(-4)}</span>
+                `;
+                document.getElementById('notConnected').classList.add('hidden');
+                document.getElementById('tradeSection').style.opacity = '1';
+                document.getElementById('buyBtn').disabled = false;
+                document.getElementById('sellBtn').disabled = false;
+                document.getElementById('connectWalletBtn').textContent = '✅ متصل';
+                document.getElementById('connectWalletBtn').disabled = true;
+                
+                APP_DATA.walletBalance = 15.5;
+                updateUI();
+            }, 2000);
+        }
+
+        // ============================================
+        //  سیستم ورود مخفی (۵ بار کلیک)
+        // ============================================
+        function handleLogoClick() {
+            const now = Date.now();
+            
+            if (APP_DATA.lastClickTime && (now - APP_DATA.lastClickTime) > 3000) {
+                APP_DATA.clickCount = 0;
+            }
+            
+            APP_DATA.clickCount++;
+            APP_DATA.lastClickTime = now;
+            
+            if (APP_DATA.clickCount >= 5) {
+                APP_DATA.clickCount = 0;
+                showLoginModal();
+            }
+        }
+
+        function showLoginModal() {
+            document.getElementById('loginModal').classList.add('show');
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginError').classList.remove('show');
+            setTimeout(() => document.getElementById('loginUsername').focus(), 100);
+        }
+
+        function hideLoginModal() {
+            document.getElementById('loginModal').classList.remove('show');
+        }
+
+        function handleLogin() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                APP_DATA.isAdmin = true;
+                saveData();
+                hideLoginModal();
+                document.getElementById('adminPanel').classList.add('show');
+                document.getElementById('adminBadge').style.display = 'inline-block';
+                showMessage('adminMessage', '✅ به پنل مدیریت خوش آمدید!', 'success');
+                updateUI();
+            } else {
+                document.getElementById('loginError').classList.add('show');
+                document.getElementById('loginPassword').value = '';
+                document.getElementById('loginPassword').focus();
+            }
+        }
+
+        function logoutAdmin() {
+            document.getElementById('adminPanel').classList.remove('show');
+            document.getElementById('adminBadge').style.display = 'none';
+            APP_DATA.isAdmin = false;
+            saveData();
+            updateUI();
+            showMessage('adminMessage', '🚪 از پنل مدیریت خارج شدید', 'info');
+        }
+
+        // ============================================
+        //  محاسبات قیمت
+        // ============================================
+        function updatePrice() {
+            const now = new Date();
+            const lastUpdate = new Date(APP_DATA.lastPriceUpdate);
+            const hoursDiff = (now - lastUpdate) / (1000 * 60 * 60);
+
+            if (hoursDiff >= 24) {
+                const days = Math.floor(hoursDiff / 24);
+                let newPrice = APP_DATA.price;
+
+                for (let i = 0; i < days; i++) {
+                    if (Math.random() < 0.5) {
+                        newPrice *= 1.05;
+                    } else {
+                        newPrice *= 0.97;
+                    }
+                }
+
+                APP_DATA.price = Math.round(newPrice * 10000) / 10000;
+                APP_DATA.lastPriceUpdate = now.toISOString();
+                saveData();
+            }
+            updateUI();
+        }
+
+        // ============================================
+        //  توابع خرید و فروش
+        // ============================================
+        function calculateBuy() {
+            const amount = parseFloat(document.getElementById('buyAmount').value);
+            if (!amount || amount <= 0) {
+                document.getElementById('buyReceive').value = '۰';
+                return;
+            }
+            const tokens = amount / APP_DATA.price;
+            document.getElementById('buyReceive').value = Math.round(tokens * 100) / 100;
+        }
+
+        function calculateSell() {
+            const amount = parseFloat(document.getElementById('sellAmount').value);
+            if (!amount || amount <= 0) {
+                document.getElementById('sellReceive').value = '۰';
+                return;
+            }
+            const gram = amount * APP_DATA.price;
+            document.getElementById('sellReceive').value = Math.round(gram * 10000) / 10000;
+        }
+
+        function buyTokens() {
+            if (!APP_DATA.isConnected) {
+                showMessage('buyMessage', 'لطفاً ابتدا کیف پول خود را متصل کنید', 'error');
+                return;
+            }
+
+            const gramAmount = parseFloat(document.getElementById('buyAmount').value);
+            if (!gramAmount || gramAmount <= 0) {
+                showMessage('buyMessage', 'لطفاً مبلغ معتبر وارد کنید', 'error');
+                return;
+            }
+
+            if (gramAmount > APP_DATA.walletBalance) {
+                showMessage('buyMessage', 'موجودی Gram شما کافی نیست!', 'error');
+                return;
+            }
+
+            const tokenAmount = gramAmount / APP_DATA.price;
+            if (tokenAmount > (APP_DATA.totalSupply - APP_DATA.circulatingSupply)) {
+                showMessage('buyMessage', 'تعداد توکن‌های باقیمانده کافی نیست!', 'error');
+                return;
+            }
+
+            APP_DATA.walletBalance -= gramAmount;
+            APP_DATA.tokenBalance += tokenAmount;
+            APP_DATA.circulatingSupply += tokenAmount;
+
+            showMessage('buyMessage', `✅ خرید موفق! ${Math.round(tokenAmount * 100) / 100} توکن Dillony دریافت کردید`, 'success');
+            saveData();
+            updateUI();
+            document.getElementById('buyAmount').value = '';
+            document.getElementById('buyReceive').value = '';
+        }
+
+        function sellTokens() {
+            if (!APP_DATA.isConnected) {
+                showMessage('sellMessage', 'لطفاً ابتدا کیف پول خود را متصل کنید', 'error');
+                return;
+            }
+
+            const tokenAmount = parseFloat(document.getElementById('sellAmount').value);
+            if (!tokenAmount || tokenAmount <= 0) {
+                showMessage('sellMessage', 'لطفاً تعداد معتبر وارد کنید', 'error');
+                return;
+            }
+
+            if (tokenAmount > APP_DATA.tokenBalance) {
+                showMessage('sellMessage', 'موجودی توکن شما کافی نیست!', 'error');
+                return;
+            }
+
+            const gramAmount = tokenAmount * APP_DATA.price;
+            APP_DATA.tokenBalance -= tokenAmount;
+            APP_DATA.walletBalance += gramAmount;
+            APP_DATA.circulatingSupply -= tokenAmount;
+
+            showMessage('sellMessage', `✅ فروش موفق! ${Math.round(gramAmount * 10000) / 10000} Gram دریافت کردید`, 'success');
+            saveData();
+            updateUI();
+            document.getElementById('sellAmount').value = '';
+            document.getElementById('sellReceive').value = '';
+        }
+
+        // ============================================
+        //  توابع مدیریت
+        // ============================================
+        function setManualPrice() {
+            if (!APP_DATA.isAdmin) {
+                showMessage('adminMessage', '⛔ شما دسترسی مدیریت ندارید!', 'error');
+                return;
+            }
+
+            const price = parseFloat(document.getElementById('manualPrice').value);
+            if (!price || price <= 0) {
+                showMessage('adminMessage', 'لطفاً قیمت معتبر وارد کنید', 'error');
+                return;
+            }
+
+            APP_DATA.price = Math.round(price * 10000) / 10000;
+            APP_DATA.lastPriceUpdate = new Date().toISOString();
+            showMessage('adminMessage', `✅ قیمت به ${APP_DATA.price} Gram تغییر کرد`, 'success');
+            saveData();
+            updateUI();
+            document.getElementById('manualPrice').value = '';
+        }
+
+        function increasePrice() {
+            if (!APP_DATA.isAdmin) {
+                showMessage('adminMessage', '⛔ شما دسترسی مدیریت ندارید!', 'error');
+                return;
+            }
+
+            APP_DATA.price = Math.round((APP_DATA.price * 1.05) * 10000) / 10000;
+            APP_DATA.lastPriceUpdate = new Date().toISOString();
+            showMessage('adminMessage', `✅ قیمت ۵% افزایش یافت: ${APP_DATA.price} Gram`, 'success');
+            saveData();
+            updateUI();
+        }
+
+        function decreasePrice() {
+            if (!APP_DATA.isAdmin) {
+                showMessage('adminMessage', '⛔ شما دسترسی مدیریت ندارید!', 'error');
+                return;
+            }
+
+            APP_DATA.price = Math.round((APP_DATA.price * 0.97) * 10000) / 10000;
+            APP_DATA.lastPriceUpdate = new Date().toISOString();
+            showMessage('adminMessage', `✅ قیمت ۳% کاهش یافت: ${APP_DATA.price} Gram`, 'success');
+            saveData();
+            updateUI();
+        }
+
+        function uploadImage() {
+            if (!APP_DATA.isAdmin) {
+                showMessage('adminMessage', '⛔ شما دسترسی مدیریت ندارید!', 'error');
+                return;
+            }
+
+            const fileInput = document.getElementById('imageUpload');
+            const file = fileInput.files[0];
+            if (!file) {
+                showMessage('adminMessage', 'لطفاً یک عکس انتخاب کنید', 'error');
+                return;
+            }
+
+            if (file.size > 2 * 1024 * 1024) {
+                showMessage('adminMessage', 'حجم عکس باید کمتر از ۲ مگابایت باشد', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const logo = document.getElementById('tokenLogo');
+                logo.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;">`;
+                showMessage('adminMessage', '✅ عکس پروژه با موفقیت آپلود شد', 'success');
+                try {
+                    localStorage.setItem('dillonyLogo', e.target.result);
+                } catch (e) {
+                    console.error('خطا در ذخیره عکس:', e);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ============================================
+        //  نمایش پیام‌ها
+        // ============================================
+        function showMessage(elementId, text, type = 'info') {
+            const el = document.getElementById(elementId);
+            el.textContent = text;
+            el.className = `message show ${type}`;
+            setTimeout(() => {
+                el.className = 'message';
+            }, 5000);
+        }
+
+        // ============================================
+        //  به‌روزرسانی UI
+        // ============================================
+        function updateUI() {
+            document.getElementById('currentPrice').textContent = APP_DATA.price.toFixed(4);
+
+            const changeValue = document.getElementById('changeValue');
+            changeValue.textContent = `+${(APP_DATA.price * 0.01).toFixed(4)}`;
+
+            document.getElementById('buyBalance').textContent = `💰 موجودی کیف پول: ${APP_DATA.walletBalance.toFixed(2)} Gram`;
+            document.getElementById('sellBalance').textContent = `💰 موجودی توکن: ${Math.round(APP_DATA.tokenBalance * 100) / 100} Dillony`;
+            document.getElementById('circulatingSupply').textContent = `در گردش: ${Math.round(APP_DATA.circulatingSupply * 100) / 100} توکن`;
+
+            document.getElementById('lastUpdate').textContent = `آخرین بروزرسانی: ${new Date(APP_DATA.lastPriceUpdate).toLocaleString('fa-IR')}`;
+
+            document.getElementById('buyBtn').disabled = !APP_DATA.isConnected;
+            document.getElementById('sellBtn').disabled = !APP_DATA.isConnected;
+
+            const savedLogo = localStorage.getItem('dillonyLogo');
+            if (savedLogo) {
+                const logo = document.getElementById('tokenLogo');
+                logo.innerHTML = `<img src="${savedLogo}" style="width:100%;height:100%;object-fit:cover;">`;
+            }
+
+            if (APP_DATA.isAdmin) {
+                document.getElementById('adminPanel').classList.add('show');
+                document.getElementById('adminBadge').style.display = 'inline-block';
+            }
+        }
+
+        // ============================================
+        //  رویدادها
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            updatePrice();
+
+            document.getElementById('tokenLogo').addEventListener('click', handleLogoClick);
+            document.getElementById('connectWalletBtn').addEventListener('click', connectToTonkeeper);
+
+            document.getElementById('loginBtn').addEventListener('click', handleLogin);
+            document.getElementById('loginPassword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') handleLogin();
+            });
+            document.getElementById('loginUsername').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') document.getElementById('loginPassword').focus();
+            });
+
+            document.getElementById('loginModal').addEventListener('click', function(e) {
+                if (e.target === this) hideLoginModal();
+            });
+
+            document.getElementById('buyAmount').addEventListener('input', calculateBuy);
+            document.getElementById('sellAmount').addEventListener('input', calculateSell);
+            document.getElementById('buyBtn').addEventListener('click', buyTokens);
+            document.getElementById('sellBtn').addEventListener('click', sellTokens);
+
+            document.getElementById('setPriceBtn').addEventListener('click', setManualPrice);
+            document.getElementById('increasePriceBtn').addEventListener('click', increasePrice);
+            document.getElementById('decreasePriceBtn').addEventListener('click', decreasePrice);
+            document.getElementById('imageUpload').addEventListener('change', uploadImage);
+            document.getElementById('logoutAdminBtn').addEventListener('click', logoutAdmin);
+
+            setInterval(() => {
+                updatePrice();
+            }, 30000);
+        });
+    </script>
+</body>
+  </html>
